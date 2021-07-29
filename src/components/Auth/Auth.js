@@ -15,23 +15,43 @@ import { useHistory } from "react-router";
 import useStyles from "./styles.js";
 import Input from "./input";
 import Icon from "./icon";
+import { signup, signin } from "../../actions/auth";
+
+const initialValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 function Auth(props) {
   const [showPassword, setShowPassword] = useState(false);
   const classes = useStyles();
   const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState(initialValues);
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (isSignUp) {
+      dispatch(signup(formData, history));
+    } else {
+      dispatch(signin(formData, history));
+    }
+  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   const handleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
   };
 
   const switchMode = () => {
     setIsSignUp(!isSignUp);
-    handleShowPassword(false);
+    setShowPassword(false);
   };
 
   const googleSuccess = async (res) => {
